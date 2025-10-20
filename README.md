@@ -395,4 +395,5 @@ docker compose -f compose.infra.yaml down -v
 - **Kafka UI**: Monitor message flow at http://localhost:9021
 - **HiveMQ Console**: Check MQTT status at http://localhost:8081
 
-Built with ❤️ for smart cities and blockchain innovation.
+### System Demo
+
