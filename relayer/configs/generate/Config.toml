@@ -1,0 +1,129 @@
+# Service
+
+[service.RELAYER_LOG_LEVEL]
+go-type = "LogLevel"
+default = "info"
+description = """Log level for the service"""
+used-by = ["relayer"]
+
+[service.RELAYER_LOG_COLOR]
+go-type = "bool"
+default = "true"
+description = """Log color for the service"""
+used-by = ["relayer"]
+
+[service.RELAYER_MAX_STARTUP_TIME]
+go-type = "Duration"
+default = "15"
+description = """Maximum startup time for the service"""
+used-by = ["relayer"]
+
+[service.RELAYER_TELEMETRY_ADDRESS]
+go-type = "string"
+description = """Telemetry address for the service"""
+used-by = ["relayer"]
+
+# Database
+
+[database.RELAYER_DATABASE_URL]
+go-type = "URL"
+file = true
+description = """MongoDB URL for the database (supports file-based secrets via RELAYER_DATABASE_URL_FILE)"""
+used-by = ["relayer"]
+
+[database.RELAYER_DATABASE_NAME]
+go-type = "RedactedString"
+description = """MongoDB name for the database"""
+used-by = ["relayer"]
+
+[database.RELAYER_DATABASE_COLLECTION]
+go-type = "RedactedString"
+description = """MongoDB collection for the database"""
+used-by = ["relayer"]
+
+# Kafka
+
+[kafka.RELAYER_KAFKA_BROKER]
+go-type = "URL"
+default = "localhost:9092"
+description = """Kafka brokers for the service"""
+used-by = ["relayer"]
+
+[kafka.RELAYER_KAFKA_TOPICS]
+go-type = "[]string"
+description = """Kafka topics for the service"""
+used-by = ["relayer"]
+
+# Auth
+
+[auth.RELAYER_AUTH_KIND]
+go-type = "AuthKind"
+default = "AuthKindPrivateKeyVar"
+description = """Auth kind for the service"""
+omit = true
+used-by = ["relayer"]
+
+[auth.RELAYER_AUTH_PRIVATE_KEY]
+go-type = "RedactedString"
+file = true
+description = """Private key for the service"""
+omit = true
+used-by = ["relayer"]
+
+[auth.RELAYER_AUTH_MNEMONIC]
+go-type = "RedactedString"
+file = true
+description = """Mnemonic for the service"""
+omit = true
+used-by = ["relayer"]
+
+[auth.RELAYER_AUTH_MNEMONIC_ACCOUNT_INDEX]
+go-type = "RedactedUint"
+default = "0"
+description = """Account index for the service"""
+omit = true
+used-by = ["relayer"]
+
+# Blockchain
+
+[blockchain.RELAYER_BLOCKCHAIN_ID]
+go-type = "uint64"
+description = """
+An unique identifier representing a blockchain network."""
+used-by = ["relayer"]
+
+[blockchain.RELAYER_BLOCKCHAIN_HTTP_ENDPOINT]
+file = true
+go-type = "URL"
+description = """
+HTTP endpoint for the blockchain RPC provider."""
+used-by = ["relayer"]
+
+[blockchain.RELAYER_BLOCKCHAIN_HTTP_MAX_RETRIES]
+default = "4"
+go-type = "uint64"
+description = """
+Maximum number of retry attempts for HTTP blockchain requests after encountering an error."""
+used-by = ["relayer"]
+
+[blockchain.RELAYER_BLOCKCHAIN_HTTP_RETRY_MIN_WAIT]
+default = "1"
+go-type = "Duration"
+description = """
+Minimum wait time in seconds for the exponential backoff retry policy. This is the initial delay before the first retry for HTTP blockchain requests."""
+used-by = ["relayer"]
+
+[blockchain.RELAYER_BLOCKCHAIN_HTTP_RETRY_MAX_WAIT]
+default = "60"
+go-type = "Duration"
+description = """
+Maximum wait time in seconds for the exponential backoff retry policy. The delay between retries for HTTP blockchain requests will never exceed this value, regardless of the backoff calculation."""
+used-by = ["relayer"]
+
+# Contracts
+
+[contracts.RELAYER_REWARD_TOKEN_ADDRESS]
+go-type = "Address"
+description = """
+Address of the RewardToken contract."""
+used-by = ["relayer"]

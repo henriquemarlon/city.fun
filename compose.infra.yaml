@@ -1,0 +1,163 @@
+name: city-fun-infra
+
+x-mongo-env: &mongo-env
+  MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-root}
+  MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+
+x-metabase-env: &metabase-env
+  MB_DB_TYPE: ${MB_DB_TYPE:-postgres}
+  MB_DB_DBNAME: ${MB_DB_DBNAME:-metabase}
+  MB_DB_PORT: ${MB_DB_PORT:-5432}
+  MB_DB_USER: ${MB_DB_USER:-metabase}
+  MB_DB_PASS: ${MB_DB_PASS:-metabase_password}
+  MB_DB_HOST: ${MB_DB_HOST:-postgres}
+  MB_BREAKOUT_BIN_WIDTH: ${MB_BREAKOUT_BIN_WIDTH:-10}
+
+x-postgres-env: &postgres-env
+  POSTGRES_DB: ${MB_DB_DBNAME:-metabase}
+  POSTGRES_USER: ${MB_DB_USER:-metabase}
+  POSTGRES_PASSWORD: ${MB_DB_PASS:-metabase_password}
+
+x-kafka-env: &kafka-env
+  KAFKA_BROKER_ID: 1
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+  KAFKA_LISTENERS: INTERNAL://:9092,OUTSIDE://:9094
+  KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://host.docker.internal:9094
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+  KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+x-healthcheck-defaults: &healthcheck-defaults
+  timeout: 1s
+  interval: 10s
+  retries: 5
+  start_period: 10s
+  start_interval: 200ms
+
+services:
+  # ===== LAYER 1: Base Infrastructure =====
+
+  # Zookeeper - Kafka coordination
+  zookeeper:
+    platform: linux/amd64
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - city-network
+
+  # ===== LAYER 2: Messaging and Database Services =====
+
+  # Kafka - Message Broker
+  kafka:
+    platform: linux/amd64
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.3.0
+    environment:
+      <<: *kafka-env
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 9094:9094
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - city-network
+
+  # MongoDB - Main application database
+  mongo:
+    container_name: mongo
+    image: mongo:7
+    restart: always
+    environment:
+      <<: *mongo-env
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - ./infraestructure/sample.js:/docker-entrypoint-initdb.d/mockup_mongodb.js:ro
+      - mongodb-data:/data/db
+    networks:
+      - city-network
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+
+  # PostgreSQL - Metabase database
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      <<: *postgres-env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${MB_DB_PORT:-5432}:5432"
+    networks:
+      - city-network
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD-SHELL", "pg_isready -U ${MB_DB_USER:-metabase}"]
+
+  # ===== LAYER 3: Tools and Middleware =====
+
+  # Kafka Control Center - Kafka management UI
+  control-center:
+    container_name: control-center
+    image: confluentinc/cp-enterprise-control-center:7.3.0
+    hostname: control-center
+    depends_on:
+      - kafka
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: "kafka:9092"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      PORT: 9021
+    networks:
+      - city-network
+
+  # HiveMQ - MQTT Broker (bridge between MQTT and Kafka)
+  hivemq:
+    container_name: hivemq
+    hostname: hivemq
+    build:
+      context: .
+      dockerfile: ./infraestructure/hivemq/Dockerfile
+    depends_on:
+      - kafka
+    ports:
+      - 1883:1883
+      - 8081:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - city-network
+
+  # Metabase - Business Intelligence
+  metabase:
+    container_name: metabase
+    image: metabase/metabase:latest
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *metabase-env
+    ports:
+      - "3001:3000"
+    networks:
+      - city-network
+
+networks:
+  city-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  postgres-data:
+

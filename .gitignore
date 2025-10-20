@@ -1,0 +1,9 @@
+# Secrets directory - contains sensitive information
+secrets/
+
+# Environment variables
+.env
+
+# Docker volumes
+mongodb-data/
+postgres-data/

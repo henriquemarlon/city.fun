@@ -1,0 +1,98 @@
+name: city-fun-apps
+
+x-healthcheck-defaults: &healthcheck-defaults
+  timeout: 1s
+  interval: 10s
+  retries: 5
+  start_period: 10s
+  start_interval: 200ms
+
+x-relayer-env: &relayer-env
+  RELAYER_AUTH_PRIVATE_KEY_FILE: /run/secrets/relayer_private_key
+  RELAYER_BLOCKCHAIN_HTTP_ENDPOINT_FILE: /run/secrets/blockchain_endpoint
+
+x-mongodb-relayer-env: &mongodb-relayer-env
+  RELAYER_DATABASE_URL: mongodb://${MONGO_ROOT_USERNAME:-root}:${MONGO_ROOT_PASSWORD:-password}@host.docker.internal:27017/city_relayer?authSource=admin
+  RELAYER_DATABASE_NAME: city_relayer
+  RELAYER_DATABASE_COLLECTION: transactions
+
+x-mongodb-simulator-env: &mongodb-simulator-env
+  SIMULATOR_DATABASE_URL: mongodb://${MONGO_ROOT_USERNAME:-root}:${MONGO_ROOT_PASSWORD:-password}@host.docker.internal:27017/city_simulator?authSource=admin
+  SIMULATOR_DATABASE_NAME: city_simulator
+  SIMULATOR_DATABASE_COLLECTION: sensors
+
+x-relayer-config-env: &relayer-config-env
+  RELAYER_LOG_LEVEL: ${RELAYER_LOG_LEVEL:-debug}
+  RELAYER_AUTH_KIND: ${RELAYER_AUTH_KIND}
+  RELAYER_KAFKA_BROKER: host.docker.internal:9092
+  RELAYER_KAFKA_TOPICS: rewards
+  RELAYER_TELEMETRY_ADDRESS: :8084
+  RELAYER_BLOCKCHAIN_ID: ${RELAYER_BLOCKCHAIN_ID:-11155111}
+  RELAYER_REWARD_TOKEN_ADDRESS: ${RELAYER_REWARD_TOKEN_ADDRESS}
+
+x-simulator-config-env: &simulator-config-env
+  SIMULATOR_LOG_LEVEL: ${SIMULATOR_LOG_LEVEL:-debug}
+  SIMULATOR_HIVEMQ_URL: tcp://host.docker.internal:1883
+  SIMULATOR_HIVEMQ_MQTT_TOPIC: rewards
+  SIMULATOR_HIVEMQ_USERNAME: ${SIMULATOR_HIVEMQ_USERNAME:-admin}
+  SIMULATOR_HIVEMQ_PASSWORD: ${SIMULATOR_HIVEMQ_PASSWORD:-hivemq}
+  SIMULATOR_SENSOR_SERVER_ADDRESS: :8082
+  SIMULATOR_TELEMETRY_ADDRESS: :8083
+  SIMULATOR_PUSH_INTERVAL: ${SIMULATOR_PUSH_INTERVAL:-20}
+
+secrets:
+  relayer_private_key:
+    file: ./secrets/pk
+  blockchain_endpoint:
+    file: ./secrets/blockchain_http_endpoint
+
+services:
+  # Simulator - City simulation
+  simulator:
+    container_name: simulator
+    hostname: simulator
+    restart: "no"
+    env_file:
+      - .env
+    build:
+      context: ./simulator
+      dockerfile: ./build/Dockerfile
+    environment:
+      <<: [*mongodb-simulator-env, *simulator-config-env]
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8083/readyz"]
+    networks:
+      - city-network
+
+  # Relayer - Main application
+  relayer:
+    container_name: relayer
+    hostname: relayer
+    restart: "no"
+    env_file:
+      - .env
+    build:
+      context: ./relayer
+      dockerfile: ./build/Dockerfile
+    depends_on:
+      simulator:
+        condition: service_healthy
+    environment:
+      <<: [*relayer-env, *mongodb-relayer-env, *relayer-config-env]
+    secrets:
+      - relayer_private_key
+      - blockchain_endpoint
+    ports:
+      - "8080:8080"
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8084/readyz"]
+    networks:
+      - city-network
+
+networks:
+  city-network:
+    name: city-fun-infra_city-network
+    external: true
+

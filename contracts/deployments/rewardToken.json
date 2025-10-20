@@ -1,0 +1,9 @@
+{
+  "rewardToken": {
+    "chainId": 11155111,
+    "timestamp": 1760962740,
+    "contracts": {
+      "rewardToken": "0xEF579120fc4ba1239A2c21e44cdF88Fc87FEA867"
+    }
+  }
+}

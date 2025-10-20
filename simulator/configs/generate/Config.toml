@@ -1,0 +1,78 @@
+# Service
+
+[service.SIMULATOR_LOG_LEVEL]
+go-type = "LogLevel"
+default = "info"
+description = """Log level for the service"""
+used-by = ["simulator"]
+
+[service.SIMULATOR_LOG_COLOR]
+go-type = "bool"
+default = "true"
+description = """Log color for the service"""
+used-by = ["simulator"]
+
+[service.SIMULATOR_PUSH_INTERVAL]
+go-type = "Duration"
+default = "10"
+description = """Push interval for the service"""
+used-by = ["simulator"]
+
+[service.SIMULATOR_SENSOR_SERVER_ADDRESS]
+go-type = "string"
+description = """Sensor server address for the service"""
+used-by = ["simulator"]
+
+[service.SIMULATOR_TELEMETRY_ADDRESS]
+go-type = "string"
+description = """Telemetry address for the service"""
+used-by = ["simulator"]
+
+[service.SIMULATOR_MAX_STARTUP_TIME]
+go-type = "Duration"
+default = "15"
+description = """Maximum startup time for the service"""
+used-by = ["simulator"]
+
+# Database
+
+[database.SIMULATOR_DATABASE_URL]
+go-type = "URL"
+file = true
+description = """MongoDB URL for the database (supports file-based secrets via SIMULATOR_DATABASE_URL_FILE)"""
+used-by = ["simulator"]
+
+[database.SIMULATOR_DATABASE_NAME]
+go-type = "string"
+description = """MongoDB name for the database"""
+used-by = ["simulator"]
+
+[database.SIMULATOR_DATABASE_COLLECTION]
+go-type = "string"
+description = """MongoDB collection for the database"""
+used-by = ["simulator"]
+
+# HiveMQ
+
+[hivemq.SIMULATOR_HIVEMQ_URL]
+go-type = "string"
+file = true
+description = """HiveMQ URL for the broker (supports file-based secrets via SIMULATOR_HIVEMQ_URL_FILE)"""
+used-by = ["simulator"]
+
+[hivemq.SIMULATOR_HIVEMQ_USERNAME]
+go-type = "string"
+file = true
+description = """HiveMQ username for the broker (supports file-based secrets via SIMULATOR_HIVEMQ_USERNAME_FILE)"""
+used-by = ["simulator"]
+
+[hivemq.SIMULATOR_HIVEMQ_PASSWORD]
+go-type = "RedactedString"
+file = true
+description = """HiveMQ password for the broker (supports file-based secrets via SIMULATOR_HIVEMQ_PASSWORD_FILE)"""
+used-by = ["simulator"]
+
+[hivemq.SIMULATOR_HIVEMQ_MQTT_TOPIC]
+go-type = "string"
+description = """MQTT topic for publishing sensor data"""
+used-by = ["simulator"]
