@@ -383,7 +383,7 @@ docker compose -f compose.infra.yaml down -v
 
 ### System Demo Video
 
-[![video](https://www.youtube.com/watch?v=eNW5405bqZY/0.jpg)](https://www.youtube.com/watch?v=eNW5405bqZY)
+[![Assistir no YouTube](https://img.youtube.com/vi/eNW5405bqZY/0.jpg)](https://www.youtube.com/watch?v=eNW5405bqZY)
 
 ### Getting Help
 
