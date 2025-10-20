@@ -75,7 +75,7 @@ Copy the example environment file and configure it:
 cp .env.example .env
 ```
 
-Edit the `.env` file with your preferred text editor:
+Edit the `.env` file with your preferred text editor (Optional):
 
 ```bash
 # MongoDB Configuration
