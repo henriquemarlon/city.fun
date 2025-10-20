@@ -172,19 +172,6 @@ This will:
 2. Start the **Simulator** - Generates and publishes sensor data via MQTT
 3. Start the **Relayer** - Consumes data from Kafka, persists to MongoDB, and mints blockchain rewards
 
-**Monitor the logs:**
-
-```bash
-# View all application logs
-docker compose -f compose.apps.yaml logs -f
-
-# View only simulator logs
-docker compose -f compose.apps.yaml logs -f simulator
-
-# View only relayer logs
-docker compose -f compose.apps.yaml logs -f relayer
-```
-
 ### Setting up Metabase
 
 Metabase provides analytics and visualization for your city sensor data. Since the infrastructure is local, you'll need to configure Metabase each time you restart the infrastructure.
@@ -306,29 +293,49 @@ Once connected, you can:
 ### Project Structure
 
 ```
+```
 city.fun/
-├── contracts/              # Solidity smart contracts for reward tokens
-├── infraestructure/        # Infrastructure configuration
-│   ├── hivemq/            # HiveMQ MQTT broker config with Kafka extension
-│   └── sample.js          # MongoDB seed data for sensors
-├── relayer/               # Go-based relayer service
-│   ├── cmd/               # Application entrypoints
-│   ├── internal/          # Internal business logic
-│   │   ├── domain/        # Domain entities (Reward)
-│   │   ├── usecase/       # Business use cases
-│   │   └── infra/         # Infrastructure layer (MongoDB, Kafka, Blockchain)
-│   └── pkg/               # Shared packages
-├── simulator/             # Go-based sensor simulator
-│   ├── cmd/               # Application entrypoints
-│   ├── internal/          # Internal business logic
-│   └── pkg/               # Shared packages
-├── secrets/               # Blockchain credentials (gitignored)
-│   ├── pk                 # Ethereum private key
-│   └── blockchain_http_endpoint  # Alchemy RPC URL
-├── compose.infra.yaml     # Infrastructure services
-├── compose.apps.yaml      # Application services
-├── .env.example           # Environment variables template
-└── README.md              # This file
+├── contracts/
+│   ├── src/
+│   ├── script/
+│   └── deployments/
+│
+├── infraestructure/
+│   ├── hivemq/
+│   └── sample.js
+│
+├── relayer/
+│   ├── cmd/relayer/
+│   ├── internal/
+│   │   ├── domain/entity/
+│   │   ├── usecase/
+│   │   └── infra/
+│   │       ├── repository/
+│   │       └── service/
+│   ├── pkg/
+│   │   ├── contracts/
+│   │   ├── kafka/
+│   │   └── workerpool/
+│   └── configs/
+│
+├── simulator/
+│   ├── cmd/congo/
+│   ├── internal/
+│   │   ├── domain/entity/
+│   │   ├── usecase/
+│   │   └── infra/
+│   │       ├── repository/
+│   │       └── service/
+│   └── pkg/
+│
+├── secrets/
+│   ├── pk
+│   └── blockchain_http_endpoint
+│
+├── compose.infra.yaml
+├── compose.apps.yaml
+├── .env.example
+└── README.md
 ```
 
 ### Technology Stack
