@@ -383,6 +383,8 @@ docker compose -f compose.infra.yaml down -v
 
 ### System Demo Video
 
+[![video](https://img.youtube.com/vi/oxsTyFJuIhA/0.jpg)](https://youtu.be/oxsTyFJuIhA)
+
 ### Getting Help
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/yourusername/city.fun/issues)
