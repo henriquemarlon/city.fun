@@ -289,7 +289,6 @@ Once connected, you can:
 ### Project Structure
 
 ```
-```
 city.fun/
 ├── contracts/
 │   ├── src/
