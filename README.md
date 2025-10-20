@@ -20,7 +20,7 @@ City.fun is a blockchain-based smart city reward system that simulates IoT senso
 
 The platform consists of two main components:
 
-**Simulator**: Emulates city sensors (such as air quality monitors and environmental sensors distributed around Palermo, Buenos Aires) using statistical models to generate realistic sensor data. Each sensor is configured with parameter ranges (min, max, and z-score) and uses these values to produce data that varies naturally within defined boundaries, mimicking real-world sensor behavior. The simulator communicates via **MQTT (Message Queuing Telemetry Transport)**, the industry-standard protocol for IoT deployments involving large quantities of sensors due to its lightweight nature and efficient bandwidth usage. This design allows **real physical sensors to seamlessly integrate with the system** by publishing data to the same MQTT broker, making the transition from simulation to production straightforward.
+**Simulator**: Emulates city Data (such as air quality monitors and environmental sensors distributed around Palermo, Buenos Aires) using statistical models to generate realistic sensor data. Each sensor is configured with parameter ranges (min, max, and z-score) and uses these values to produce data that varies naturally within defined boundaries, mimicking real-world sensor behavior. The simulator communicates via **MQTT (Message Queuing Telemetry Transport)**, the industry-standard protocol for IoT deployments involving large quantities of sensors due to its lightweight nature and efficient bandwidth usage. This design allows **real physical sensors to seamlessly integrate with the system** by publishing data to the same MQTT broker, making the transition from simulation to production straightforward.
 
 **Relayer**: Processes sensor data consumed from Kafka message queues, validates and persists reward records to MongoDB using latitude/longitude coordinates as unique identifiers, and mints ERC-20 reward tokens on the Ethereum blockchain (Sepolia testnet) to participant wallet addresses.
 </div>
@@ -207,7 +207,7 @@ On first launch, Metabase will ask you to create an admin account:
 After initial setup, connect Metabase to your MongoDB instance:
 
 1. **Go to Settings**
-   - Click the gear icon in the top right
+   - Click the gear icon ⚙️ in the top right
    - Select "Admin settings"
    - Click "Databases" in the left menu
 
@@ -216,34 +216,26 @@ After initial setup, connect Metabase to your MongoDB instance:
    - Select **MongoDB** from the database type dropdown
 
 3. **Configure MongoDB Connection**
+
+   Use the **connection string** method for easier configuration:
+
    ```
-   Display name: City Sensors
-   Host: host.docker.internal
-   Port: 27017
-   Database name: city_simulator
-   Username: root
-   Password: password
-   Authentication database: admin
+   Display name: City Data
+   Connection String: mongodb://root:password@host.docker.internal:27017/city_simulator?authSource=admin
    ```
+
+   Replace `password` with your `MONGO_ROOT_PASSWORD` from the `.env` file.
 
 4. **Save and test connection**
    - Click "Save"
    - Metabase will test the connection
    - You should see a success message
 
-5. **Add Relayer Database (Optional)**
-   - Repeat steps above with:
-     ```
-     Display name: City Relayer
-     Database name: city_relayer
-     (other settings remain the same)
-     ```
-
 #### 4. Explore Your Data
 
 Once connected, you can:
 
-- **Browse Data**: Click "Browse Data" → "City Sensors" → "sensors" table
+- **Browse Data**: Click "Browse Data" → "City Data" → "transactions" table
 - **Create Questions**: Build custom queries to analyze sensor data
 - **Build Dashboards**: Create visualizations for:
   - Sensor locations on a map (latitude/longitude)
