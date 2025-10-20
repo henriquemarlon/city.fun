@@ -3,9 +3,9 @@ db = db.getSiblingDB("city_simulator");
 const documents = [
     {
         name: "MICS-6814",
-        latitude: -34.5889,
-        longitude: -58.4193,
-        receiver: "0x1f0D1cB0dDeB5a432A495eeFB958754bC498dD85",
+        latitude: -34.5775,
+        longitude: -58.4200,
+        receiver: "0x4f38EB57C31d6F638Df0D50dF2FfC9e90cA676bF",
         amount: "1000000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -18,9 +18,9 @@ const documents = [
     },
     {
         name: "SPS30",
-        latitude: -34.5912,
-        longitude: -58.4152,
-        receiver: "0xd66124E3a821159C1feDB1623B41d2163Bae8504",
+        latitude: -34.5790,
+        longitude: -58.4165,
+        receiver: "0x3C65cCAdaBE5813C1F342f3d0F48eCCFdA293AB7",
         amount: "2500000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -33,9 +33,9 @@ const documents = [
     },
     {
         name: "RXW-LIB-900",
-        latitude: -34.5875,
-        longitude: -58.4223,
-        receiver: "0xBf10C685274C38DFd234Cc7B02b7BaE9dD710054",
+        latitude: -34.5808,
+        longitude: -58.4180,
+        receiver: "0x447404F4a8Ca2944A14C08293F4554E28017Aba4",
         amount: "1500000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -48,9 +48,9 @@ const documents = [
     },
     {
         name: "BME680",
-        latitude: -34.5845,
-        longitude: -58.4178,
-        receiver: "0xA3A02d01E0b2545754d329364958E6518D431169",
+        latitude: -34.5765,
+        longitude: -58.4145,
+        receiver: "0x30bC1ec0B43b6206fC4312e2Eed8eBa957B62243",
         amount: "3000000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -63,9 +63,9 @@ const documents = [
     },
     {
         name: "PMS5003",
-        latitude: -34.5798,
-        longitude: -58.4201,
-        receiver: "0xE6eCAD2c7EF02a3Aa4A976d3879ddeeC2628C1f9",
+        latitude: -34.5820,
+        longitude: -58.4220,
+        receiver: "0x99226c9854d86a63179144331db8B1f1377C5B3F",
         amount: "1800000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -78,9 +78,9 @@ const documents = [
     },
     {
         name: "SGP30",
-        latitude: -34.5923,
-        longitude: -58.4087,
-        receiver: "0xbd0F26c9fE36cD9b2966Eb23cbD699F0D251F236",
+        latitude: -34.5750,
+        longitude: -58.4190,
+        receiver: "0xEccE5FEd062c26Dc041a5af22db952Aba26d29E2",
         amount: "2200000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -93,9 +93,9 @@ const documents = [
     },
     {
         name: "CCS811",
-        latitude: -34.5867,
-        longitude: -58.4265,
-        receiver: "0x10d5a4Eb99B0dF1Ad4D5F6385850e1b25F48571A",
+        latitude: -34.5835,
+        longitude: -58.4155,
+        receiver: "0x88a0345323DefbB4DE5c44eC3AaC275915Ab10C2",
         amount: "1200000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -108,9 +108,9 @@ const documents = [
     },
     {
         name: "DHT22",
-        latitude: -34.5756,
-        longitude: -58.4156,
-        receiver: "0xF2038dD5cDA1064D0a0367a34B822BB440586692",
+        latitude: -34.5785,
+        longitude: -58.4135,
+        receiver: "0x2B22761Fd72894c2dF8f6cE6B7c383e7BA7B8cf4",
         amount: "2800000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -123,9 +123,9 @@ const documents = [
     },
     {
         name: "MQ135",
-        latitude: -34.5934,
-        longitude: -58.4234,
-        receiver: "0x28eF289b58517B84042B8b2B9887C80fae6764f8",
+        latitude: -34.5795,
+        longitude: -58.4240,
+        receiver: "0x10c064EA15E6Ad7767f4FB5ee81305f2b1C83F18",
         amount: "1600000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },
@@ -138,9 +138,9 @@ const documents = [
     },
     {
         name: "ZE08-CH2O",
-        latitude: -34.5821,
-        longitude: -58.4289,
-        receiver: "0xc3A7aA98E3b44ce720bF1f12360Fa0964948490B",
+        latitude: -34.5740,
+        longitude: -58.4175,
+        receiver: "0x2B47539B91fcaC7Fb22EbE58eeb6dfA910C61aC3",
         amount: "2100000000000000000",
         params: {
             co2: { min: 0, max: 1000, z: 1.96 },

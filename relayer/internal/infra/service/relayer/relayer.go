@@ -23,11 +23,11 @@ import (
 )
 
 type RewardResult struct {
-	MessageId  string
-	Success    bool
-	Error      error
-	Output     *usecase.CreateRewardOutputDTO
-	KafkaMsg   *ckafka.Message
+	MessageId string
+	Success   bool
+	Error     error
+	Output    *usecase.CreateRewardOutputDTO
+	KafkaMsg  *ckafka.Message
 }
 
 type Service struct {
@@ -281,8 +281,8 @@ func (s *Service) consumeKafkaMessages() {
 				return
 			}
 		case err := <-errChan:
-			s.Logger.Error("Kafka consumer failed, stopping service", "error", err)
-			s.Stop(true)
+			s.Logger.Error("Kafka consumer failed, requesting shutdown", "error", err)
+			select { case <-s.sigintChan: default: close(s.sigintChan) }
 			return
 		case <-s.sigintChan:
 			return
@@ -323,7 +323,7 @@ func (s *Service) processBlockchainTransactions() {
 
 			s.Logger.Info("Reward minted on blockchain",
 				"id", reward.Id.Hex(),
-				"token", reward.Token,
+				"token", s.token,
 				"amount", reward.Amount,
 				"receiver", reward.Receiver,
 				"tx_hash", txHash,
@@ -340,7 +340,7 @@ func (s *Service) processBlockchainTransactions() {
 }
 
 func (s *Service) mintReward(reward *usecase.CreateRewardOutputDTO) (common.Hash, error) {
-	tokenAddr := common.HexToAddress(reward.Token)
+	tokenAddr := s.token
 	receiverAddr := common.HexToAddress(reward.Receiver)
 
 	contract, err := rewardtoken.NewRewardToken(tokenAddr, s.ethClient)
@@ -353,13 +353,14 @@ func (s *Service) mintReward(reward *usecase.CreateRewardOutputDTO) (common.Hash
 		return common.Hash{}, fmt.Errorf("invalid amount format: %s", reward.Amount)
 	}
 
-	nonce, err := s.ethClient.PendingNonceAt(s.Context, s.txOpts.From)
+	txOpts := *s.txOpts // clone
+	nonce, err := s.ethClient.PendingNonceAt(s.Context, txOpts.From)
 	if err != nil {
 		return common.Hash{}, fmt.Errorf("failed to get nonce: %w", err)
 	}
-	s.txOpts.Nonce = big.NewInt(int64(nonce))
+	txOpts.Nonce = big.NewInt(int64(nonce))
 
-	tx, err := contract.Mint(s.txOpts, receiverAddr, amount)
+	tx, err := contract.Mint(&txOpts, receiverAddr, amount)
 	if err != nil {
 		return common.Hash{}, fmt.Errorf("failed to mint: %w", err)
 	}

@@ -42,9 +42,6 @@ func (c *KafkaConsumer) Consume(msgChan chan *ckafka.Message) error {
 }
 
 func (c *KafkaConsumer) CommitMessage(msg *ckafka.Message) error {
-	if c.consumer == nil {
-		return fmt.Errorf("consumer not initialized")
-	}
 	_, err := c.consumer.CommitMessage(msg)
 	return err
 }
