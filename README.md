@@ -63,7 +63,7 @@ Before running the system, ensure you have the following installed:
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/city.fun.git
+git clone https://github.com/henriquemarlon/city.fun.git
 cd city.fun
 ```
 
