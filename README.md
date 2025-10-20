@@ -18,7 +18,11 @@
 <div align="justify">
 City.fun is a blockchain-based smart city reward system that simulates IoT sensor networks and distributes rewards to participants based on sensor data. The system integrates multiple technologies including MQTT for sensor communication, Kafka for message streaming, MongoDB for data persistence, and Ethereum smart contracts for reward token distribution.
 
-The platform consists of two main components: a **Simulator** that emulates city sensors (such as air quality monitors and environmental sensors distributed around Palermo, Buenos Aires), and a **Relayer** that processes sensor data and mints reward tokens on the Ethereum blockchain (Sepolia testnet).
+The platform consists of two main components:
+
+**Simulator**: Emulates city sensors (such as air quality monitors and environmental sensors distributed around Palermo, Buenos Aires) using statistical models to generate realistic sensor data. Each sensor is configured with parameter ranges (min, max, and z-score) and uses these values to produce data that varies naturally within defined boundaries, mimicking real-world sensor behavior. The simulator communicates via **MQTT (Message Queuing Telemetry Transport)**, the industry-standard protocol for IoT deployments involving large quantities of sensors due to its lightweight nature and efficient bandwidth usage. This design allows **real physical sensors to seamlessly integrate with the system** by publishing data to the same MQTT broker, making the transition from simulation to production straightforward.
+
+**Relayer**: Processes sensor data consumed from Kafka message queues, validates and persists reward records to MongoDB using latitude/longitude coordinates as unique identifiers, and mints ERC-20 reward tokens on the Ethereum blockchain (Sepolia testnet) to participant wallet addresses.
 </div>
 
 ## Architecture
