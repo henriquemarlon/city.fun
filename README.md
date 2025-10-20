@@ -381,12 +381,11 @@ docker compose -f compose.infra.yaml down
 docker compose -f compose.infra.yaml down -v
 ```
 
+### System Demo Video
+
 ### Getting Help
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/yourusername/city.fun/issues)
 - **Logs**: Always check service logs when debugging
 - **Kafka UI**: Monitor message flow at http://localhost:9021
 - **HiveMQ Console**: Check MQTT status at http://localhost:8081
-
-### System Demo Video
-
